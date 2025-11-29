@@ -1,0 +1,146 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Pink Theme Colors */
+  --color-primary: #FF6B81;
+  /* Brand Pink */
+  --color-secondary: #FF8FA3;
+  /* Light Pink */
+  --color-accent: #FF6B81;
+  /* Same as primary for consistency */
+  --color-background: #FFFFFF;
+  /* Clean White */
+
+  /* Fonts */
+  --font-sans: var(--font-noto-sans-kr), -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  --font-inter: var(--font-inter);
+
+  /* shadcn/ui colors - Pink Theme */
+  --color-card: #FFFFFF;
+  --color-card-foreground: #191F28;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #191F28;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary-foreground: #191F28;
+  --color-muted: #F2F4F6;
+  --color-muted-foreground: #8B95A1;
+  --color-accent-foreground: #191F28;
+  --color-destructive: #FF5F5F;
+  --color-border: #E5E8EB;
+  --color-input: #E5E8EB;
+  --color-ring: #FF6B81;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  /* Custom animations */
+  --animate-fade-in: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-scale-up: scaleUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+:root {
+  --radius: 1.25rem;
+
+  /* Base colors re-mapped */
+  --card: 0 0% 100%;
+  --card-foreground: 220 13% 13%;
+  /* #191F28 */
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 13% 13%;
+  --primary-foreground: 0 0% 100%;
+  --secondary-foreground: 220 13% 13%;
+  --muted: 210 14% 96%;
+  /* #F2F4F6 */
+  --muted-foreground: 215 14% 59%;
+  /* #8B95A1 */
+  --accent-foreground: 220 13% 13%;
+  --destructive: 0 100% 69%;
+  --border: 220 13% 91%;
+  /* #E5E8EB */
+  --input: 220 13% 91%;
+  --ring: 351 100% 71%;
+  /* Pink ring */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-[#191F28];
+    font-feature-settings: "tnum";
+    letter-spacing: -0.03em;
+    /* Tight tracking like Toss */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-pink {
+    @apply text-[#FF6B81];
+  }
+
+  /* Removed gradients, kept glass effect but cleaner */
+  .glass-effect {
+    @apply bg-white/80 backdrop-blur-md border border-white/40 shadow-sm;
+  }
+
+  .section-padding {
+    @apply py-24 sm:py-32;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
