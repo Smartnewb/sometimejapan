@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAppStore } from '@/lib/store';
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseAdmin } from '@/lib/supabase';
 import { Check, Sparkles } from 'lucide-react';
 
 export default function FinalCTA() {
@@ -30,18 +30,24 @@ export default function FinalCTA() {
         setError('');
 
         try {
-            // Save to Supabase
-            const { data, error: supabaseError } = await supabase
+            // Save to Supabase - Use service role for public pre-registration
+            const { data, error: supabaseError } = await supabaseAdmin
                 .from('pre_registrations')
                 .insert([{ email }])
                 .select();
 
             if (supabaseError) {
-                throw supabaseError;
+                if (supabaseError.code === '23505' || supabaseError.message.includes('duplicate')) {
+                    setError('✅ 이미 등록된 이메일입니다!');
+                } else {
+                    throw supabaseError;
+                }
             }
 
-            setRegistrationData({ email });
-            setFormSubmitted(true);
+            if (!supabaseError) {
+                setRegistrationData({ email });
+                setFormSubmitted(true);
+            }
         } catch (err: any) {
             console.error('Error saving registration:', err);
             setError(err.message || '등록 중 오류가 발생했습니다. 다시 시도해주세요.');
