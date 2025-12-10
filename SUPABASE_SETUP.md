@@ -25,7 +25,7 @@ Supabase Dashboard에서 SQL Editor를 열고 다음 쿼리를 실행하세요:
 -- pre_registrations 테이블 생성
 CREATE TABLE pre_registrations (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  email TEXT NOT NULL UNIQUE,
+  phone TEXT NOT NULL UNIQUE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );
 
@@ -54,7 +54,7 @@ npm run dev -- --webpack
 
 1. http://localhost:3000 접속
 2. 페이지 하단의 "사전 등록하기" 섹션으로 스크롤
-3. 이메일 입력 후 제출
+3. 전화번호 입력 후 제출
 4. Supabase Dashboard → Table Editor → pre_registrations에서 데이터 확인
 
 ## 보안 참고사항

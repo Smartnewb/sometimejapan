@@ -18,13 +18,13 @@ export default function FinalCTA() {
         setFormSubmitted
     } = useAppStore();
 
-    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!email) return;
+        if (!phone) return;
 
         setFormSubmitting(true);
         setError('');
@@ -33,19 +33,19 @@ export default function FinalCTA() {
             // Save to Supabase - Use service role for public pre-registration
             const { data, error: supabaseError } = await supabaseAdmin
                 .from('pre_registrations')
-                .insert([{ email }])
+                .insert([{ phone }])
                 .select();
 
             if (supabaseError) {
                 if (supabaseError.code === '23505' || supabaseError.message.includes('duplicate')) {
-                    setError('✅ 이미 등록된 이메일입니다!');
+                    setError('✅ 이미 등록된 전화번호입니다!');
                 } else {
                     throw supabaseError;
                 }
             }
 
             if (!supabaseError) {
-                setRegistrationData({ email });
+                setRegistrationData({ phone });
                 setFormSubmitted(true);
             }
         } catch (err: any) {
@@ -120,10 +120,10 @@ export default function FinalCTA() {
                             <form onSubmit={handleSubmit} className="max-w-md mx-auto">
                                 <div className="flex flex-col sm:flex-row gap-3">
                                     <Input
-                                        type="email"
-                                        placeholder="이메일 주소를 입력하세요"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        type="tel"
+                                        placeholder="전화번호를 입력하세요 (예: 010-1234-5678)"
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
                                         required
                                         className="flex-1 h-12 px-6 text-lg"
                                         disabled={isFormSubmitting}
@@ -162,7 +162,7 @@ export default function FinalCTA() {
                                 </h3>
                                 <p className="text-lg text-neutral-600 mb-6">
                                     사전 등록이 완료되었습니다!<br />
-                                    출시 소식을 <span className="font-semibold text-accent">{registrationData.email}</span>로 보내드릴게요.
+                                    출시 소식을 <span className="font-semibold text-accent">{registrationData.phone}</span>로 보내드릴게요.
                                 </p>
                                 <p className="text-neutral-500">
                                     친구에게도 추천해주시면 더 많은 혜택을 받으실 수 있어요! ✨

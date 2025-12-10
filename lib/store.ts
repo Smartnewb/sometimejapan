@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 interface RegistrationData {
-    email: string;
+    phone: string;
     name?: string;
     university?: string;
 }
@@ -30,7 +30,7 @@ export const useAppStore = create<AppState>((set) => ({
     isMobileMenuOpen: false,
     setMobileMenuOpen: (open) => set({ isMobileMenuOpen: open }),
 
-    registrationData: { email: '' },
+    registrationData: { phone: '' },
     setRegistrationData: (data) => set((state) => ({
         registrationData: { ...state.registrationData, ...data }
     })),
