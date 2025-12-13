@@ -1,43 +1,28 @@
 'use client';
 
-import { motion, useSpring, useTransform, useMotionValueEvent } from 'framer-motion';
+import { motion, useInView, animate } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
-import { useInView } from 'framer-motion';
 
 function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {
     const ref = useRef(null);
-    const [isMounted, setIsMounted] = useState(false);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
-    const count = useSpring(0, { duration: 2000, bounce: 0 });
-    const rounded = useTransform(count, (latest) => Math.round(latest));
     const [displayValue, setDisplayValue] = useState(0);
 
     useEffect(() => {
-        setIsMounted(true);
-    }, []);
-
-    useEffect(() => {
-        if (isInView && isMounted) {
-            count.set(target);
+        if (isInView) {
+            const controls = animate(0, target, {
+                duration: 2,
+                onUpdate: (value) => setDisplayValue(Math.round(value)),
+                ease: "easeOut"
+            });
+            return () => controls.stop();
         }
-    }, [isInView, isMounted, count, target]);
-
-    useMotionValueEvent(rounded, "change", (latest) => {
-        setDisplayValue(latest);
-    });
-
-    if (!isMounted) {
-        return (
-            <span className="text-6xl sm:text-7xl font-bold text-[#333D4B] tracking-tighter">
-                0{suffix}
-            </span>
-        );
-    }
+    }, [isInView, target]);
 
     return (
-        <motion.span ref={ref} className="text-6xl sm:text-7xl font-bold text-[#333D4B] tracking-tighter">
+        <span ref={ref} className="text-6xl sm:text-7xl font-bold text-[#333D4B] tracking-tighter">
             {displayValue.toLocaleString()}{suffix}
-        </motion.span>
+        </span>
     );
 }
 
