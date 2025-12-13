@@ -10,15 +10,22 @@ import { Menu, X } from 'lucide-react';
 export default function Navbar() {
     const { isMobileMenuOpen, setMobileMenuOpen } = useAppStore();
     const [scrolled, setScrolled] = useState(false);
+    const [scrollY, setScrollY] = useState(0);
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
+            const currentScrollY = window.scrollY;
+            setScrollY(currentScrollY);
+            setScrolled(currentScrollY > 20);
         };
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // 스크롤 위치에 따른 텍스트 색상 결정 (120px 이하: 흰색, 200px 이상: 원래 색상)
+    const isTopArea = scrollY <= 120;
+    const isTransitionArea = scrollY > 120 && scrollY < 200;
 
     const navLinks = [
         { href: '#features', label: '특징' },
@@ -39,8 +46,22 @@ export default function Navbar() {
                     <div className="flex items-center justify-between h-16 md:h-20">
                         {/* Logo */}
                         <Link href="/" className="flex items-center space-x-2 group">
-                            <span className="text-2xl font-bold text-[#191F28] group-hover:text-[#FF6B81] transition-colors">썸타임</span>
-                            <span className="hidden sm:inline text-xl text-[#B0B8C1]">× 日本</span>
+                            <span
+                                className="text-2xl font-bold group-hover:text-[#FF6B81] transition-all duration-300"
+                                style={{
+                                    color: isTopArea ? '#FFFFFF' : (isTransitionArea ? `rgba(25, 31, 40, ${(scrollY - 120) / 80})` : '#191F28')
+                                }}
+                            >
+                                썸타임
+                            </span>
+                            <span
+                                className="hidden sm:inline text-xl transition-all duration-300"
+                                style={{
+                                    color: isTopArea ? '#FFFFFF' : (isTransitionArea ? `rgba(176, 184, 193, ${(scrollY - 120) / 80})` : '#B0B8C1')
+                                }}
+                            >
+                                × 日本
+                            </span>
                         </Link>
 
                         {/* Desktop Navigation */}
@@ -49,7 +70,10 @@ export default function Navbar() {
                                 <a
                                     key={link.href}
                                     href={link.href}
-                                    className="text-[#4E5968] hover:text-[#191F28] hover:bg-[#F2F4F6] px-4 py-2 rounded-lg transition-all font-medium text-base"
+                                    className="hover:text-[#191F28] hover:bg-[#F2F4F6] px-4 py-2 rounded-lg transition-all duration-300 font-medium text-base"
+                                    style={{
+                                        color: isTopArea ? '#FFFFFF' : (isTransitionArea ? `rgba(78, 89, 104, ${(scrollY - 120) / 80})` : '#4E5968')
+                                    }}
                                 >
                                     {link.label}
                                 </a>
@@ -65,7 +89,10 @@ export default function Navbar() {
                         {/* Mobile Menu Button */}
                         <button
                             onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-                            className="md:hidden p-2 text-[#4E5968]"
+                            className="md:hidden p-2 transition-all duration-300"
+                            style={{
+                                color: isTopArea ? '#FFFFFF' : (isTransitionArea ? `rgba(78, 89, 104, ${(scrollY - 120) / 80})` : '#4E5968')
+                            }}
                             aria-label="Toggle menu"
                         >
                             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

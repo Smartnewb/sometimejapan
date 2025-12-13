@@ -1,24 +1,42 @@
 'use client';
 
-import { motion, useSpring, useTransform } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { motion, useSpring, useTransform, useMotionValueEvent } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import { useInView } from 'framer-motion';
 
 function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {
     const ref = useRef(null);
+    const [isMounted, setIsMounted] = useState(false);
     const isInView = useInView(ref, { once: true, margin: "-100px" });
     const count = useSpring(0, { duration: 2000, bounce: 0 });
     const rounded = useTransform(count, (latest) => Math.round(latest));
+    const [displayValue, setDisplayValue] = useState(0);
 
     useEffect(() => {
-        if (isInView) {
+        setIsMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (isInView && isMounted) {
             count.set(target);
         }
-    }, [isInView, count, target]);
+    }, [isInView, isMounted, count, target]);
+
+    useMotionValueEvent(rounded, "change", (latest) => {
+        setDisplayValue(latest);
+    });
+
+    if (!isMounted) {
+        return (
+            <span className="text-6xl sm:text-7xl font-bold text-[#333D4B] tracking-tighter">
+                0{suffix}
+            </span>
+        );
+    }
 
     return (
         <motion.span ref={ref} className="text-6xl sm:text-7xl font-bold text-[#333D4B] tracking-tighter">
-            {rounded.get().toLocaleString()}{suffix}
+            {displayValue.toLocaleString()}{suffix}
         </motion.span>
     );
 }
@@ -30,17 +48,17 @@ const stats = [
         label: '사전 등록 목표',
     },
     {
-        value: 50,
-        suffix: '개',
-        label: '한국 대학 파트너십',
+        value: 200,
+        suffix: '+',
+        label: '한국 대학',
     },
     {
-        value: 30,
-        suffix: '개',
-        label: '일본 대학 협력 예정',
+        value: 150,
+        suffix: '개 예정',
+        label: '일본 대학',
     },
     {
-        value: 98,
+        value: 95,
         suffix: '%',
         label: '베타 테스터 만족도',
     },
